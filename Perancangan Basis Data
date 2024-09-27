@@ -1,0 +1,70 @@
+CREATE DATABASE Check_Protein_app;
+USE Check_Protein_app;
+
+CREATE TABLE pengguna (
+    id_pengguna INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(50),
+    usia INT,
+    pekerjaan VARCHAR(50),
+    lokasi VARCHAR(50),
+    status_keluarga VARCHAR(20),
+    hobi VARCHAR(100)
+);
+
+CREATE TABLE anak (
+    id_anak INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT,
+    nama_anak VARCHAR(50),
+    usia_anak INT,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+CREATE TABLE makanan (
+    id_makanan INT AUTO_INCREMENT PRIMARY KEY,
+    nama_makanan VARCHAR(50),
+    jenis_makanan VARCHAR(50),
+    kalori INT,
+    catatan_khusus VARCHAR(100)
+);
+
+CREATE TABLE aktivitas (
+    id_aktivitas INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT,
+    jenis_aktivitas VARCHAR(50),
+    durasi INT,  -- dalam menit
+    frekuensi VARCHAR(20),  -- Harian, Mingguan, Bulanan
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+CREATE TABLE jadwal (
+    id_jadwal INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT,
+    tanggal DATE,
+    deskripsi VARCHAR(100),
+    jenis_jadwal VARCHAR(50),  -- Makanan atau Aktivitas
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+INSERT INTO pengguna (nama, usia, pekerjaan, lokasi, status_keluarga, hobi)
+VALUES ('Maya', 37, 'Direktur Pemasaran', 'Jakarta Pusat', 'Menikah', 'Lari maraton, pameran seni, piano');
+
+INSERT INTO anak (id_pengguna, nama_anak, usia_anak)
+VALUES (1, 'Lily', 6), (1, 'Leo', 4);
+
+SELECT * FROM pengguna;
+
+UPDATE pengguna
+SET hobi = 'Lari maraton, pameran seni, piano, membaca buku'
+WHERE id_pengguna = 1;
+
+DELETE FROM jadwal WHERE id_jadwal = 1;
+
+"Tampilan View Data"
+
+CREATE VIEW view_jadwal_maya AS
+SELECT j.tanggal, j.deskripsi, j.jenis_jadwal
+FROM jadwal j
+JOIN pengguna p ON j.id_pengguna = p.id_pengguna
+WHERE p.nama = 'Maya';
+
+SELECT * FROM view_jadwal_maya;
